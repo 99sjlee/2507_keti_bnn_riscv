@@ -1,0 +1,27 @@
+#include <string.h>
+#include "ervp_assert.h"
+#include "ervp_matrix_op.h"
+
+void _matrix_ewmult_fixed_sw(ervp_mop_mapping_t* mop_mapping, const ErvpMatrixInfo *a, const ErvpMatrixInfo *b, ErvpMatrixInfo *c, int options)
+{
+  int i, j;
+  ervp_mop_option_t mop_option = mop_option_alloc(options);
+  assert(_mop_option_check(c, options));
+	for(i=0; i<a->num_row; i++)
+	{
+		for(j=0; j<a->num_col; j++)
+		{
+      int result = 0;
+      int a_value = matrix_read_fixed_element(a, i, j);
+      int b_value = matrix_read_fixed_element(b, i, j);
+      
+      result = a_value * b_value;
+      result = _melement_perform_rshift_and_clip(result,mop_option.br.rshift,mop_option.br.performs_cliping,c->datatype);
+      if(mop_option.br.acc)
+        result += matrix_read_fixed_element(c, i, j);
+      matrix_write_fixed_element(c, i, j, result);
+    }
+	}
+  c->is_binary = a->is_binary & b->is_binary;
+  mop_option_free(mop_option);
+}

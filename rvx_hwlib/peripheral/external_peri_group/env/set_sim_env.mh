@@ -1,0 +1,7 @@
+include ${RVX_HWLIB_HOME}/peripheral/uart/env/set_sim_env.mh
+include ${RVX_HWLIB_HOME}/peripheral/spi/env/set_sim_env.mh
+include ${RVX_HWLIB_HOME}/peripheral/i2c/env/set_sim_env.mh
+include ${RVX_HWLIB_HOME}/peripheral/gpio/env/set_sim_env.mh
+
+LIB_DIR_LIST += ${RVX_HWLIB_HOME}/peripheral/external_peri_group/src
+INC_DIR_LIST += ${RVX_HWLIB_HOME}/peripheral/external_peri_group/include

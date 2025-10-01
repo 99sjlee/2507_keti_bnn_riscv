@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<rvx_tool_config>
+  <rtl_simulator>modelsim</rtl_simulator>
+  <use_terminal_for_implementing_fpga>False</use_terminal_for_implementing_fpga>
+  <use_terminal_for_running_ocd>True</use_terminal_for_running_ocd>
+  <use_terminal_for_connecting_ocd>True</use_terminal_for_connecting_ocd>
+  <use_terminal_for_printf>True</use_terminal_for_printf>
+  <build_smart>True</build_smart>
+  <build_local>True</build_local>
+  <syn_local>True</syn_local>
+  <minicom_as_file>False</minicom_as_file>
+</rvx_tool_config>

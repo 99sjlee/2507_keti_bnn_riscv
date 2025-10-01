@@ -1,0 +1,2 @@
+LIB_DIR_LIST += ${RVX_HWLIB_HOME}/peripheral/i2c/src
+INC_DIR_LIST += ${RVX_HWLIB_HOME}/peripheral/i2c/include

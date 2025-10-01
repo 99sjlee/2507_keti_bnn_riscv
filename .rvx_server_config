@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<rvx_server_config>
+  <ip_address encoded="False">beta.rvx.coreicc.net</ip_address>
+  <ssh_port encoded="False">2022</ssh_port>
+  <username encoded="False">keti1_arx01</username>
+  <passwd encoded="True">gAAAAABogIJmtQCiAgRKXpSkW2N7_Rsd23gdNCM_dmfZZQnTIuC4W1lgSrDMpx9CP_jxRV6WtNxL6fzRjna9o9-ODvLiU-KRmg==</passwd>
+</rvx_server_config>

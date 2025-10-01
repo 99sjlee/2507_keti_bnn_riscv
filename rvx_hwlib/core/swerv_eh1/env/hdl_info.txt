@@ -1,0 +1,34 @@
+## ****************************************************************************
+## ****************************************************************************
+## Copyright SoC Design Research Group, All rights reservxd.
+## Electronics and Telecommunications Research Institute (ETRI)
+## 
+## THESE DOCUMENTS CONTAIN CONFIDENTIAL INFORMATION AND KNOWLEDGE
+## WHICH IS THE PROPERTY OF ETRI. NO PART OF THIS PUBLICATION IS
+## TO BE USED FOR ANY OTHER PURPOSE, AND THESE ARE NOT TO BE
+## REPRODUCED, COPIED, DISCLOSED, TRANSMITTED, STORED IN A RETRIEVAL
+## SYSTEM OR TRANSLATED INTO ANY OTHER HUMAN OR COMPUTER LANGUAGE,
+## IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
+## COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
+## ****************************************************************************
+## 2024-09-30
+## Kyuseung Han (han@etri.re.kr)
+## ****************************************************************************
+## ****************************************************************************
+
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/pkg
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/dbg
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/dec
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/dma
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/exu
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/ifu
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/lib
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/lsu
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/pic
+all:lib:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/top_src
+all:lib:v:${RVX_HWLIB_HOME}/core/swerv_eh1/top_src
+
+all:include:v:${RVX_HWLIB_HOME}/core/swerv_eh1/include
+all:include:sv:${RVX_HWLIB_HOME}/core/swerv_eh1/include
+
+syn:define::SYNTHESIS

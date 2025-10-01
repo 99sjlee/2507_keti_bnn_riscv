@@ -1,0 +1,41 @@
+#include "dca_matrix_info.h"
+#include "ervp_matrix_element.h"
+#include "ervp_malloc.h"
+#include "ervp_assert.h"
+
+dca_matrix_info_t *dca_generate_matrix_info(const ErvpMatrixInfo *info, dca_matrix_info_t *prealloated)
+{
+  dca_matrix_info_t *result;
+  if (prealloated != NULL)
+    result = prealloated;
+  else
+  {
+    result = malloc(sizeof(dca_matrix_info_t));
+    assert(result);
+  }
+  result->hex[(sizeof(dca_matrix_info_t) >> 2) - 1] = 0;
+  result->br.addr = info->addr;
+  result->br.stride_ls3 = info->stride_ls3;
+  result->br.num_row_m1 = info->num_row - 1;
+  result->br.num_col_m1 = info->num_col - 1;
+  ErvpMatrixDataType datatype;
+  datatype.value = info->datatype;
+  result->br.is_signed = datatype.br.is_signed;
+  result->br.is_float = datatype.br.is_float;
+  result->br.addr_lsa_p3 = datatype.br.addr_lsa + 3;
+  return result;
+}
+
+dca_matrix_info_t *dca_init_matrix_info(dca_matrix_info_t *prealloated)
+{
+  dca_matrix_info_t *result;
+  if (prealloated != NULL)
+    result = prealloated;
+  else
+  {
+    result = malloc(sizeof(dca_matrix_info_t));
+    assert(result);
+  }
+  for (int i = 0; i < (sizeof(dca_matrix_info_t) >> 2); i++)
+    result->hex[i] = 0;
+}

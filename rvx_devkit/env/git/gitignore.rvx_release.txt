@@ -1,0 +1,9 @@
+*~
+*.swp
+*.swo
+*.bak
+*.sh
+rvx_*.log
+rvx_*.cfg
+rvx_python_config.mh
+.rvx_*

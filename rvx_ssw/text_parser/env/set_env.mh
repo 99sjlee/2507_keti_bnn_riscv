@@ -1,0 +1,7 @@
+ifndef __TEXT_PARSER_ENV__
+__TEXT_PARSER_ENV__=
+
+C_SRC += $(wildcard ${RVX_SSW_HOME}/text_parser/src/*.c)
+INCLUDES += -I${RVX_SSW_HOME}/text_parser/src
+
+endif

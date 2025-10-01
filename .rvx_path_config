@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<rvx_path_config>
+  <home_path>/home/sjlee/2507_keti_bnn_riscv</home_path>
+  <devkit_path>None</devkit_path>
+  <python3_cmd>/usr/bin/python3</python3_cmd>
+  <utility_path>/home/sjlee/2507_keti_bnn_riscv/rvx_util</utility_path>
+  <env_path>/home/sjlee/2507_keti_bnn_riscv/rvx_devkit/env</env_path>
+  <windows_binary_path>None</windows_binary_path>
+  <local_setup_path>/home/sjlee/2507_keti_bnn_riscv/local_setup</local_setup_path>
+  <gui_path>/home/sjlee/2507_keti_bnn_riscv/local_setup/gui</gui_path>
+  <ocd_path>/home/sjlee/2507_keti_bnn_riscv/local_setup/ocd</ocd_path>
+</rvx_path_config>

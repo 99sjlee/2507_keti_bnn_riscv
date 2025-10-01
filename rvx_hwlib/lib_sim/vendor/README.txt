@@ -1,0 +1,4 @@
+N25Qxxx - Flash
+s25fl128s - Flash
+IS42SM32160E_Rev0_1 - SDRAM
+IS42VM16160K_Rev0_1 - SDRAM

@@ -1,0 +1,32 @@
+// ****************************************************************************
+// ****************************************************************************
+// Copyright SoC Design Research Group, All rights reservxd.
+// Electronics and Telecommunications Research Institute (ETRI)
+// 
+// THESE DOCUMENTS CONTAIN CONFIDENTIAL INFORMATION AND KNOWLEDGE
+// WHICH IS THE PROPERTY OF ETRI. NO PART OF THIS PUBLICATION IS
+// TO BE USED FOR ANY OTHER PURPOSE, AND THESE ARE NOT TO BE
+// REPRODUCED, COPIED, DISCLOSED, TRANSMITTED, STORED IN A RETRIEVAL
+// SYSTEM OR TRANSLATED INTO ANY OTHER HUMAN OR COMPUTER LANGUAGE,
+// IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
+// COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
+// ****************************************************************************
+// 2025-07-15
+// Kyuseung Han (han@etri.re.kr)
+// ****************************************************************************
+// ****************************************************************************
+
+module CLOCK_XOR
+(
+	clk_input0,
+	clk_input1,
+	clk_output
+);
+
+input wire clk_input0;
+input wire clk_input1;
+output wire clk_output;
+
+assign clk_output = clk_input0 ^ clk_input1;
+
+endmodule

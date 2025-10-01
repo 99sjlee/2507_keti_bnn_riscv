@@ -1,0 +1,2 @@
+all:include:v:${RVX_HWLIB_HOME}/peripheral/adc/include
+all:lib:v:${RVX_HWLIB_HOME}/peripheral/adc/src

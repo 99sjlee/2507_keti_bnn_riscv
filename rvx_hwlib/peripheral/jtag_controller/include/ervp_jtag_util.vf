@@ -1,0 +1,246 @@
+// ****************************************************************************
+// ****************************************************************************
+// Copyright SoC Design Research Group, All rights reservxd.
+// Electronics and Telecommunications Research Institute (ETRI)
+// 
+// THESE DOCUMENTS CONTAIN CONFIDENTIAL INFORMATION AND KNOWLEDGE
+// WHICH IS THE PROPERTY OF ETRI. NO PART OF THIS PUBLICATION IS
+// TO BE USED FOR ANY OTHER PURPOSE, AND THESE ARE NOT TO BE
+// REPRODUCED, COPIED, DISCLOSED, TRANSMITTED, STORED IN A RETRIEVAL
+// SYSTEM OR TRANSLATED INTO ANY OTHER HUMAN OR COMPUTER LANGUAGE,
+// IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
+// COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
+// ****************************************************************************
+// 2025-07-15
+// Kyuseung Han (han@etri.re.kr)
+// ****************************************************************************
+// ****************************************************************************
+`ifndef JTAG_CLOCK_PERIOD
+`define JTAG_CLOCK_PERIOD 100
+`endif
+
+`ifndef BW_JTAG_IR
+`define BW_JTAG_IR 8
+`endif
+
+`ifndef BW_JTAG_DR
+`define BW_JTAG_DR 32
+`endif
+
+`define BW_JTAG_OUTPUT 128
+
+reg [`BW_JTAG_OUTPUT-1:0] pjtag_routput;
+wire [`BW_JTAG_DR-1:0] pjtag_rdr_out;
+wire [`BW_JTAG_IR-1:0] pjtag_rir_out;
+reg tdo_enable;
+
+always@(posedge pjtag_rtck, negedge pjtag_rtrstnn)
+begin
+	if(pjtag_rtrstnn==0)
+		pjtag_routput <= 0;
+	else if(tdo_enable==1)
+	begin
+		pjtag_routput[`BW_JTAG_OUTPUT-2:0] <= (pjtag_routput>>1);
+		pjtag_routput[`BW_JTAG_OUTPUT-1] <= pjtag_rtdo;
+	end
+end
+
+assign pjtag_rdr_out = pjtag_routput[`BW_JTAG_OUTPUT-1-:`BW_JTAG_DR];
+assign pjtag_rir_out = pjtag_routput[`BW_JTAG_OUTPUT-1-:`BW_JTAG_IR];
+
+initial
+begin
+	pjtag_rtck = 0;
+	pjtag_rtrstnn = 1;
+	pjtag_rtms = 0;
+	pjtag_rtdi = 0;
+	tdo_enable = 0;
+end
+
+task next_jtag_clk;
+begin
+	#(`JTAG_CLOCK_PERIOD/2)
+	pjtag_rtck = 0;
+	#(`JTAG_CLOCK_PERIOD/2)
+	pjtag_rtck = 1;
+end
+endtask
+
+task init_jtag;
+begin
+	pjtag_rtrstnn = 1;
+	next_jtag_clk;
+	pjtag_rtrstnn = 0;
+	next_jtag_clk;
+	next_jtag_clk;
+	pjtag_rtrstnn = 1;
+	reset_jtag_state();
+	$display("[JTAG:INFO] initialized");
+end
+endtask
+
+task reset_jtag_state;
+begin
+	pjtag_rtms = 1;
+	next_jtag_clk();
+	next_jtag_clk();
+	next_jtag_clk();
+	next_jtag_clk();
+	next_jtag_clk();
+	next_jtag_clk();
+end
+endtask
+
+task send_IR;
+	input [`BW_JTAG_IR-1:0] input_value;
+	integer i;
+begin
+
+	#1 pjtag_rtms = 0; next_jtag_clk();
+	#1 pjtag_rtms = 1; next_jtag_clk();
+	#1 pjtag_rtms = 1; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+
+	tdo_enable = 1;
+	for(i=0;i<`BW_JTAG_IR; i=i+1)
+	begin
+		#1
+		if(i==(`BW_JTAG_IR-1))
+			pjtag_rtms = 1;
+		else
+			pjtag_rtms = 0;
+		pjtag_rtdi = input_value[i];
+		next_jtag_clk();
+	end
+	tdo_enable = 0;
+
+	#1 pjtag_rtms = 1; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+end
+endtask
+
+task send_DR;
+	input [`BW_JTAG_DR-1:0] input_value;
+	integer i;
+begin
+	#1 pjtag_rtms = 1; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+
+	tdo_enable = 1;
+	for(i=0;i<`BW_JTAG_DR; i=i+1)
+	begin
+		#1
+		if(i==(`BW_JTAG_DR-1))
+			pjtag_rtms = 1;
+		else
+			pjtag_rtms = 0;
+		pjtag_rtdi = input_value[i];
+		next_jtag_clk();
+	end
+	tdo_enable = 0;
+
+	#1 pjtag_rtms = 1; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+	#1 pjtag_rtms = 0; next_jtag_clk();
+end
+endtask
+
+task send_DRQ;
+	input [`BW_JTAG_DR-1:0] input_value;
+begin
+	while(1)
+	begin
+		send_DR(input_value);
+		if(pjtag_rdr_out==0)
+			break;
+	end
+end
+endtask
+
+task wait_response;
+begin
+	while(1)
+	begin
+		send_IR(`JTAG_INST_RESPONSE);
+		if(pjtag_rir_out!=0)
+			break;
+	end
+	
+	send_DR(0);
+	if(pjtag_rdr_out!=0)
+	begin
+		$display("jtag process causes an error at %08d", $time);
+		next_jtag_clk();
+		next_jtag_clk();
+		next_jtag_clk();
+		$finish;
+	end
+end
+endtask
+
+task print_data;
+begin
+	wait_response();
+	send_DR(0);
+	$display("[JTAG:INFO] DR: %08x", pjtag_rdr_out);
+end
+endtask
+
+task write_system_using_jtag;
+	input integer addr;
+	input integer wdata;
+begin
+	
+	send_IR(`JTAG_INST_REQUEST);
+	send_DRQ(`JTAG_CMD_SYSTEM_WRITE);
+	send_DRQ(addr);
+	send_DRQ(wdata);
+	wait_response();
+end
+endtask
+
+task print_system_using_jtag;
+	input integer addr;
+begin
+	send_IR(`JTAG_INST_REQUEST);
+	send_DRQ(`JTAG_CMD_SYSTEM_READ);
+	send_DRQ(addr);
+	print_data();
+end
+endtask
+
+task write_memory_using_jtag;
+	input integer addr;
+	input integer wdata;
+begin
+	
+	send_IR(`JTAG_INST_REQUEST);
+	send_DRQ(`JTAG_CMD_MEMORY_WRITE);
+	send_DRQ(addr);
+	send_DRQ(wdata);
+	wait_response();
+end
+endtask
+
+task print_memory_using_jtag;
+	input integer addr;
+begin
+	send_IR(`JTAG_INST_REQUEST);
+	send_DRQ(`JTAG_CMD_MEMORY_READ);
+	send_DRQ(addr);
+	print_data();
+end
+endtask
+
+task test_bypass;
+	integer i;
+begin
+	reset_jtag_state();
+
+	send_IR(`JTAG_INST_BYPASS);
+	print_data();
+end
+endtask

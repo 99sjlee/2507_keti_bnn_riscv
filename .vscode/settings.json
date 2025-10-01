@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "ervp_real_clock.h": "c",
+        "ervp_printf.h": "c",
+        "ervp_reg_util.h": "c",
+        "random": "c",
+        "array": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "rope": "c",
+        "slist": "c",
+        "initializer_list": "c",
+        "ranges": "c",
+        "span": "c",
+        "regex": "c",
+        "utility": "c",
+        "valarray": "c",
+        "stdint.h": "c",
+        "*.def": "c",
+        "cstring": "c",
+        "types.h": "c",
+        "functional": "c",
+        "ervp_variable_allocation.h": "c"
+    }
+}

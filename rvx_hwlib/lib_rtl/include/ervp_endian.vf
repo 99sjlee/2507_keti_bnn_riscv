@@ -1,0 +1,87 @@
+// ****************************************************************************
+// ****************************************************************************
+// Copyright SoC Design Research Group, All rights reservxd.
+// Electronics and Telecommunications Research Institute (ETRI)
+// 
+// THESE DOCUMENTS CONTAIN CONFIDENTIAL INFORMATION AND KNOWLEDGE
+// WHICH IS THE PROPERTY OF ETRI. NO PART OF THIS PUBLICATION IS
+// TO BE USED FOR ANY OTHER PURPOSE, AND THESE ARE NOT TO BE
+// REPRODUCED, COPIED, DISCLOSED, TRANSMITTED, STORED IN A RETRIEVAL
+// SYSTEM OR TRANSLATED INTO ANY OTHER HUMAN OR COMPUTER LANGUAGE,
+// IN ANY FORM, BY ANY MEANS, IN WHOLE OR IN PART, WITHOUT THE
+// COMPLETE PRIOR WRITTEN PERMISSION OF ETRI.
+// ****************************************************************************
+// 2025-07-15
+// Kyuseung Han (han@etri.re.kr)
+// ****************************************************************************
+// ****************************************************************************
+
+function integer CHANGE_ENDIAN;
+	input integer width;
+	input [128-1:0] data;
+	integer i;
+	reg [128-1:0] temp;
+begin
+	CHANGE_ENDIAN = 0;
+	temp = 0;
+	for(i=0; i<width; i=i+8)
+		temp[i+8-1-:8] = data[width-1-i-:8];
+	case(width)
+		8:
+			CHANGE_ENDIAN = temp[8-1:0];
+		16:
+			CHANGE_ENDIAN = temp[16-1:0];
+		32:
+			CHANGE_ENDIAN = temp[32-1:0];
+		64:
+			CHANGE_ENDIAN = temp[64-1:0];
+		128:
+			CHANGE_ENDIAN = temp[128-1:0];
+	endcase
+end
+endfunction
+
+function integer CHANGE_ENDIAN_BUS2MAN;
+	input integer width;
+	input integer endian_type;
+	input [128-1:0] data;
+begin
+	CHANGE_ENDIAN_BUS2MAN = 0;
+	case(endian_type)
+		`LITTLE_ENDIAN:
+			CHANGE_ENDIAN_BUS2MAN = data;
+		`BIG_ENDIAN:
+			CHANGE_ENDIAN_BUS2MAN = CHANGE_ENDIAN(width,data);
+	endcase
+end
+endfunction
+
+function integer CHANGE_ENDIAN_MAN2BUS;
+	input integer width;
+	input integer endian_type;
+	input [128-1:0] data;
+begin
+	CHANGE_ENDIAN_MAN2BUS = 0;
+	case(endian_type)
+		`LITTLE_ENDIAN:
+			CHANGE_ENDIAN_MAN2BUS = data;
+		`BIG_ENDIAN:
+			CHANGE_ENDIAN_MAN2BUS = CHANGE_ENDIAN(width,data);
+	endcase
+end
+endfunction
+
+function integer CHANGE_ENDIAN_HEX2MAN;
+	input integer width;
+	input integer endian_type;
+	input [128-1:0] data;
+begin
+	CHANGE_ENDIAN_HEX2MAN = 0;
+	case(endian_type)
+		`LITTLE_ENDIAN:
+			CHANGE_ENDIAN_HEX2MAN = CHANGE_ENDIAN(width,data);
+		`BIG_ENDIAN:
+			CHANGE_ENDIAN_HEX2MAN = data;
+	endcase
+end
+endfunction
